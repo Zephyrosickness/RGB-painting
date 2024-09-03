@@ -1,6 +1,7 @@
-import javax.swing.JFrame;
+import javax.swing.*;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import java.awt.GridLayout;
 
 public class display{
     public static void main(String[] args){
@@ -19,24 +20,52 @@ public class display{
 
         //panel that holds all the stuff on the side
         JPanel colorGrid = new JPanel();
-        colorGrid.setBounds(0, 0, 300, 400);
+        colorGrid.setBounds(300, 0, 300, 400);
+        colorGrid.setLayout(null);
+        gridButtons(colorGrid);
         frame.add(colorGrid);
 
         //controlPanelButtons(controlPanel);
 
         frame.setResizable(false);
         frame.setVisible(true);
-
+        
     }
 
     //adds buttons for sidepanel
     public static void controlPanelButtons(JPanel panel){
+        final String[] LABEL_OBJECT_NAMES = {"Rows", "Columns"};
+        int bound = 1;
 
-        //set to null for absolute positioning (eg being able to directly specify what x/y value items go on)
+        for (String i:LABEL_OBJECT_NAMES){
+            addVar("label", bound, panel, i);
+            bound++;
+        }
 
-        JLabel debug = new JLabel("--------------------------------------------------------------------------------------------------------------------------------------------");
-        debug.setBounds(0,0,280,25);
-        panel.add(debug);
+
     }
 
+
+    public static void gridButtons(JPanel panel){
+        panel.setLayout(new GridLayout(3,2));
+        panel.setBounds(300, 0, 300, 400);
+
+
+    }
+
+    public static void addVar(String dataType, int bound, JPanel panel, String additions){
+        final int INTERVAL = 25;
+
+        switch(dataType){
+
+            case "label":
+                int length = additions.length();
+                int varLength = 8*length;
+                JLabel label = new JLabel(additions);
+                label.setBounds(INTERVAL,INTERVAL*bound,varLength,INTERVAL);
+                panel.add(label);
+                break;
+
+        }
+    }
 }
