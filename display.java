@@ -4,11 +4,6 @@ import javax.swing.JPanel;
 import java.awt.GridLayout;
 
 public class display{
-    //interval for ui placements
-    final static int INTERVAL = 25;
-    //how many px each character needs
-    final static int CHAR_LENGTH = 8;
-
     public static void main(String[] args){
 
         // create a window
@@ -34,7 +29,7 @@ public class display{
 
         frame.setResizable(false);
         frame.setVisible(true);
-
+        
     }
 
     //adds buttons for sidepanel
@@ -47,15 +42,7 @@ public class display{
             bound++;
         }
 
-        //fields; interval*5 because rows is 4 chars
-        JTextField ROW_TEXT_FIELD = new JTextField("0");
-        ROW_TEXT_FIELD.setBounds(INTERVAL*5*CHAR_LENGTH, INTERVAL, INTERVAL, INTERVAL);
-        panel.add(ROW_TEXT_FIELD);
 
-        //fields; interval*9 because columns is 8 chars, interval*2 because column is the 2nd one down
-        JTextField COLUMN_TEXT_FIELD = new JTextField("0");
-        COLUMN_TEXT_FIELD.setBounds(INTERVAL*9*CHAR_LENGTH, INTERVAL*2, INTERVAL, INTERVAL);
-        panel.add(COLUMN_TEXT_FIELD);
     }
 
 
@@ -67,16 +54,16 @@ public class display{
     }
 
     public static void addVar(String dataType, int bound, JPanel panel, String additions){
+        final int INTERVAL = 25;
 
         switch(dataType){
 
             case "label":
                 int length = additions.length();
                 int varLength = 8*length;
-
-                JLabel LABEL = new JLabel(additions);
-                LABEL.setBounds(INTERVAL,INTERVAL*bound,varLength,INTERVAL);
-                panel.add(LABEL);
+                JLabel label = new JLabel(additions);
+                label.setBounds(INTERVAL,INTERVAL*bound,varLength,INTERVAL);
+                panel.add(label);
                 break;
 
         }
