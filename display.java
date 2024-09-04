@@ -3,6 +3,7 @@ import java.awt.*;
 import java.util.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class display{
     //interval for ui placements
@@ -65,21 +66,28 @@ public class display{
         columnTextField.setBounds(INTERVAL+((CHAR_LENGTH*COLUMN_TEXT.getText().length())), INTERVAL*2, INTERVAL, INTERVAL);
         panel.add(columnTextField);
 
+        //where u type in the rgb
+        JTextField hexField = new JTextField("111");
+        hexField.setBounds(INTERVAL, HEIGHT/3, (WIDTH/2)-(INTERVAL*4), HEIGHT/2);
+        panel.add(hexField);
+
         //button
-        JButton refresh = new JButton("run");
-        refresh.setBounds(WIDTH/4,200,CHAR_LENGTH*refresh.getText().length(),INTERVAL);
+        JButton refresh = new JButton("Test");
+        refresh.setBounds(WIDTH/4,0,CHAR_LENGTH*refresh.getText().length(),INTERVAL);
         panel.add(refresh);
 
         refresh.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 gridButtons(grid);
+                parseHex(Integer.parseInt(hexField.getText()));
             }
         });
+
+
     }
 
     public static void gridButtons(JPanel panel){
         panel.removeAll();
-
         int column = Integer.parseInt(columnTextField.getText());
         int row = Integer.parseInt(rowTextField.getText());
         if(row<=0){
@@ -94,16 +102,44 @@ public class display{
 
         for(int rowCount=1;rowCount<=row;rowCount++){
             for(int columnCount=1;columnCount<=column;columnCount++){
-                int A = rand.nextInt(255);
+                int R = rand.nextInt(255);
+                int G = rand.nextInt(255);
                 int B = rand.nextInt(255);
-                int C = rand.nextInt(255);
+                Color color = new Color(R,G,B);
 
-                Color color = new Color(A,B,C);
-                JTextField debug = new JTextField();
-                debug.setBackground(color);
-                panel.add(debug);
+                JTextField colorPane = new JTextField();
+                colorPane.setBackground(color);
+                panel.add(colorPane);
+                panel.repaint();
+                panel.revalidate();
             }
         }
-        panel.repaint();
+    }
+
+    public static ArrayList<Integer> parseHex(int hex){
+        int length = Integer.toString(hex).length();
+        String hexCode = Character.toString(Integer.toString(hex).charAt(0));
+        int count = 0;
+        ArrayList<Integer> output = new ArrayList<Integer>();
+        for(int i=1;i<length;i++){
+            char current = Integer.toString(hex).charAt(i);
+            hexCode += current;
+            if((i+1)%3==0){
+                output.add(Integer.parseInt(hexCode));
+                count += 3;
+
+                if((i+1)<length){
+                    i++;
+                }                  
+                hexCode = Character.toString(Integer.toString(hex).charAt(i));
+            }
+        }
+        System.out.println(count);
+        if(count<length){
+            output.add(Integer.parseInt(hexCode));
+        }
+
+        System.out.println(output);
+        return output;
     }
 }
