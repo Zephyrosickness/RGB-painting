@@ -15,6 +15,7 @@ public class display{
     static JTextField columnTextField;
     final static int WIDTH = 600;
     final static int HEIGHT = 400;
+    static JTextField hexField;
 
     public static void main(String[] args){
 
@@ -57,17 +58,17 @@ public class display{
         panel.add(COLUMN_TEXT);
 
         //fields for column
-        rowTextField = new JTextField("3");
+        rowTextField = new JTextField("1");
         rowTextField.setBounds(INTERVAL+((CHAR_LENGTH*ROW_TEXT.getText().length())), INTERVAL, INTERVAL, INTERVAL);
         panel.add(rowTextField);
 
         //field for column
-        columnTextField = new JTextField("3");
+        columnTextField = new JTextField("1");
         columnTextField.setBounds(INTERVAL+((CHAR_LENGTH*COLUMN_TEXT.getText().length())), INTERVAL*2, INTERVAL, INTERVAL);
         panel.add(columnTextField);
 
         //where u type in the rgb
-        JTextField hexField = new JTextField("111");
+        hexField = new JTextField("123");
         hexField.setBounds(INTERVAL, HEIGHT/3, (WIDTH/2)-(INTERVAL*4), HEIGHT/2);
         panel.add(hexField);
 
@@ -87,9 +88,13 @@ public class display{
     }
 
     public static void gridButtons(JPanel panel){
+        //init var
         panel.removeAll();
         int column = Integer.parseInt(columnTextField.getText());
         int row = Integer.parseInt(rowTextField.getText());
+        int iterations = column*row;
+
+        //error handler
         if(row<=0){
             row = 1;
         }
@@ -98,48 +103,70 @@ public class display{
         }
 
         panel.setLayout(new GridLayout(row,column));
-        Random rand = new Random();
 
-        for(int rowCount=1;rowCount<=row;rowCount++){
-            for(int columnCount=1;columnCount<=column;columnCount++){
-                int R = rand.nextInt(255);
-                int G = rand.nextInt(255);
-                int B = rand.nextInt(255);
-                Color color = new Color(R,G,B);
+        Color color = new Color(0,0,0);
+        for(int i=0;i<=iterations;i++){
+            ArrayList<Integer> RGB = parseHex(Integer.parseInt(hexField.getText()));
+            int RIndex = 0+(3*i);
+            int GIndex = 1+(3*i);
+            int BIndex = 2+(3*i);
+            int RColor = 0;
+            int GColor = 0;
+            int BColor = 0;
 
-                JTextField colorPane = new JTextField();
-                colorPane.setBackground(color);
-                panel.add(colorPane);
-                panel.repaint();
-                panel.revalidate();
+            if(RIndex>=(RGB.size()-1)==false){
+                RColor = RGB.get(RIndex);
             }
+            if(GIndex>=(RGB.size()-1)==false){
+                GColor = RGB.get(GIndex);
+            }
+            if(BIndex>=(RGB.size()-1)==false){
+                BColor = RGB.get(BIndex);
+            }
+                color = new Color(RColor,GColor,BColor);
+            }
+
+        JTextField colorPane = new JTextField();
+        colorPane.setBackground(color);
+        panel.add(colorPane);
+        panel.repaint();
+        panel.revalidate();
         }
-    }
 
     public static ArrayList<Integer> parseHex(int hex){
-        int length = Integer.toString(hex).length();
-        String hexCode = Character.toString(Integer.toString(hex).charAt(0));
+        //init var
+        String hexString = Integer.toString(hex);
+        int length = hexString.length();
+        String hexCode = Character.toString(hexString.charAt(0));
         int count = 0;
+        final int[] DECIMALS = {0,1,2,3,4,5,6,7,8,9};
         ArrayList<Integer> output = new ArrayList<Integer>();
+
+
         for(int i=1;i<length;i++){
-            char current = Integer.toString(hex).charAt(i);
+            char current = hexString.charAt(i);
+            //error handler
+            if(Arrays.asList(DECIMALS).contains((int)current)==false){
+                current = '0';
+            }
             hexCode += current;
+            //after 3 values, add to list of rgb values
             if((i+1)%3==0){
-                output.add(Integer.parseInt(hexCode));
+                int hexInt = Integer.parseInt(hexCode);
+                output.add(hexInt);
                 count += 3;
 
                 if((i+1)<length){
                     i++;
                 }                  
-                hexCode = Character.toString(Integer.toString(hex).charAt(i));
+                hexCode = Character.toString(hexString.charAt(i));
             }
         }
-        System.out.println(count);
+        //add the rest
         if(count<length){
             output.add(Integer.parseInt(hexCode));
         }
 
-        System.out.println(output);
         return output;
     }
 }
