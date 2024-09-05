@@ -103,16 +103,28 @@ public class display{
         }
 
         panel.setLayout(new GridLayout(row,column));
-
+        int i = 0;
         Color color = new Color(0,0,0);
-        for(int i=0;i<=iterations;i++){
+        while(i<=iterations){
+
             ArrayList<Integer> RGB = parseHex(Integer.parseInt(hexField.getText()));
-            int RIndex = 0+(3*i);
-            int GIndex = 1+(3*i);
-            int BIndex = 2+(3*i);
+            int RIndex = 0;
+            int GIndex = 1;
+            int BIndex = 2;
+
+            //prevents negative nums
+
+            if(i>0){
+            RIndex = 0+(3*i);
+            GIndex = 1+(3*i);
+            BIndex = 2+(3*i);
+            }
+
             int RColor = 0;
             int GColor = 0;
             int BColor = 0;
+
+            //System.out.println(RGB.get(RIndex));
 
             if(RIndex>=(RGB.size()-1)==false){
                 RColor = RGB.get(RIndex);
@@ -131,6 +143,8 @@ public class display{
         panel.add(colorPane);
         panel.repaint();
         panel.revalidate();
+
+        i++;
         }
 
     public static ArrayList<Integer> parseHex(int hex){
