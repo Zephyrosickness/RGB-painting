@@ -7,6 +7,7 @@ public class misc extends display{
         int length = hex.length();
         String hexCode = Character.toString(hex.charAt(0));
         int count = 0;
+
         ArrayList<Integer> output = new ArrayList<Integer>();
 
 
@@ -32,9 +33,5 @@ public class misc extends display{
         }
         System.out.println("OUTPUT: "+output);
         return output;
-    }
-
-    public static void initHexPanel(int rows, JPanel panel){
-
     }
 }

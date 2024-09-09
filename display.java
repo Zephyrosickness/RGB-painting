@@ -1,10 +1,12 @@
 import javax.swing.*;
-
 import java.awt.*;
-import java.util.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+
 
 public class display{
     //interval for ui placements
@@ -42,7 +44,6 @@ public class display{
 
         frame.setResizable(false);
         frame.setVisible(true);
-
     }
 
     //adds buttons for sidepanel
@@ -69,13 +70,13 @@ public class display{
         panel.add(columnTextField);
 
         //where u type in the rgb
-        JTextField hexField = new JTextField("100123");
-        hexField.setBounds(INTERVAL, HEIGHT/2,(WIDTH/2)-INTERVAL, (HEIGHT/2)-INTERVAL);
+        JTextField hexField = new JTextField("0");
+        hexField.setBounds(INTERVAL, INTERVAL*4, (WIDTH/2)-INTERVAL*4, (HEIGHT/2)+INTERVAL);
         panel.add(hexField);
 
          //button
-        JButton refresh = new JButton("Test");
-        refresh.setBounds(WIDTH/4,0,CHAR_LENGTH*refresh.getText().length(),INTERVAL);
+        JButton refresh = new JButton("Run");
+        refresh.setBounds(WIDTH/4,(INTERVAL*3)-(INTERVAL/5),(CHAR_LENGTH*3)*refresh.getText().length(),INTERVAL);
         panel.add(refresh);
 
         refresh.addActionListener(new ActionListener() {
@@ -112,9 +113,9 @@ public class display{
         for(int i = 0;i<iterations;i++){
 
             //init var
-            int RIndex = 0;
-            int GIndex = 1;
-            int BIndex = 2;
+            int RIndex = 0 + (3*i);
+            int GIndex = 1 + (3*i);
+            int BIndex = 2 + (3*i);
 
             int RColor = 0;
             int GColor = 0;
@@ -123,12 +124,7 @@ public class display{
             int[] indexList = {RIndex,GIndex,BIndex};
             int[] colorList = {RColor,GColor,BColor};
 
-            if(i!=0){
-                RIndex += 3*i;
-                GIndex += 3*i;
-                BIndex += 3*i;
-            }
-            System.out.println("SIZE "+RGB.size());
+
             /*ik ur not supposed to do scalars whenever possible to keep code versitile but trying to do Arrays.aslist(indexList).size() just always returns 0 and i dont think
             they're gonna invent RGB2 and add a fourth value any time soon or whatever so itll always just be 3 inputs of R,G,B anyway*/
             for(int j = 0; j<=2;j++){
@@ -142,10 +138,7 @@ public class display{
                     
                 }
             }
-            
-
-            
-
+              
             RColor = colorList[0];
             GColor = colorList[1];
             BColor = colorList[2];
