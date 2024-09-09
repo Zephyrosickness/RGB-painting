@@ -1,4 +1,5 @@
 import javax.swing.*;
+
 import java.awt.*;
 import java.util.*;
 import java.awt.event.ActionEvent;
@@ -11,12 +12,16 @@ public class display{
     //how many px each character needs
     final static int CHAR_LENGTH = 8;
 
-    static JTextField rowTextField;
-    static JTextField columnTextField;
     final static int WIDTH = 600;
     final static int HEIGHT = 400;
-    static JTextField hexField;
 
+    static int panelCount = 0;
+
+    //panels where the elements go
+    //controlpanel: row/column data / colorgrid: panel for the colors / inputpanel: panel for user rgb input
+    static JPanel controlPanel = new JPanel();
+    static JPanel colorGrid = new JPanel();
+    static JPanel inputPanel = new JPanel();
     public static void main(String[] args){
 
         // create a window
@@ -24,20 +29,16 @@ public class display{
         frame.setSize(WIDTH, HEIGHT);
         frame.setLayout(null);
 
-        //panel that holds all the stuff on the side
-        JPanel controlPanel = new JPanel();
+        //panel that holds all the row/column data
         controlPanel.setBounds(0, 0, WIDTH/2, HEIGHT);
         controlPanel.setLayout(null);
         frame.add(controlPanel);
 
-
-        //panel that holds all the stuff on the side
-        JPanel colorGrid = new JPanel();
+        //panel that holds all color
         colorGrid.setBounds((WIDTH/2)-(INTERVAL*2),INTERVAL,WIDTH/2,WIDTH/2);
         frame.add(colorGrid);
 
-        controlPanelButtons(controlPanel, colorGrid);
-        gridButtons(colorGrid);
+        controlPanelButtons(controlPanel);
 
         frame.setResizable(false);
         frame.setVisible(true);
@@ -45,7 +46,7 @@ public class display{
     }
 
     //adds buttons for sidepanel
-    public static void controlPanelButtons(JPanel panel, JPanel grid){
+    public static void controlPanelButtons(JPanel panel){
 
         //labels for rows
         JLabel ROW_TEXT = new JLabel("Rows");
@@ -57,42 +58,44 @@ public class display{
         COLUMN_TEXT.setBounds(INTERVAL, INTERVAL*2, INTERVAL*(CHAR_LENGTH*COLUMN_TEXT.getText().length()), INTERVAL);
         panel.add(COLUMN_TEXT);
 
-        //fields for column
-        rowTextField = new JTextField("1");
+        //fields for rows
+        JTextField rowTextField = new JTextField("4");
         rowTextField.setBounds(INTERVAL+((CHAR_LENGTH*ROW_TEXT.getText().length())), INTERVAL, INTERVAL, INTERVAL);
         panel.add(rowTextField);
 
         //field for column
-        columnTextField = new JTextField("1");
+        JTextField columnTextField = new JTextField("2");
         columnTextField.setBounds(INTERVAL+((CHAR_LENGTH*COLUMN_TEXT.getText().length())), INTERVAL*2, INTERVAL, INTERVAL);
         panel.add(columnTextField);
 
         //where u type in the rgb
-        hexField = new JTextField("100123");
-        hexField.setBounds(INTERVAL, HEIGHT/3, (WIDTH/2)-(INTERVAL*4), HEIGHT/2);
+        JTextField hexField = new JTextField("100123");
+        hexField.setBounds(INTERVAL, HEIGHT/2,(WIDTH/2)-INTERVAL, (HEIGHT/2)-INTERVAL);
         panel.add(hexField);
 
-        //button
+         //button
         JButton refresh = new JButton("Test");
         refresh.setBounds(WIDTH/4,0,CHAR_LENGTH*refresh.getText().length(),INTERVAL);
         panel.add(refresh);
 
         refresh.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                gridButtons(grid);
-                misc.parseHex(Integer.parseInt(hexField.getText()));
+                gridButtons(colorGrid, Integer.parseInt(rowTextField.getText()), Integer.parseInt(columnTextField.getText()),hexField.getText());
+                //misc.parseHex(Integer.parseInt(hexField.getText()));
             }
         });
 
+        gridButtons(colorGrid, Integer.parseInt(rowTextField.getText()), Integer.parseInt(columnTextField.getText()), hexField.getText());
 
     }
 
-    public static void gridButtons(JPanel panel){
+    public static void gridButtons(JPanel panel, int row, int column, String hex){
+
         //init var
         panel.removeAll();
-        int column = Integer.parseInt(columnTextField.getText());
-        int row = Integer.parseInt(rowTextField.getText());
+
         int iterations = column*row;
+        System.out.println("test");
 
         //error handler
         if(row<=0){
@@ -104,9 +107,10 @@ public class display{
 
         panel.setLayout(new GridLayout(row,column));
         Color color = new Color(0,0,0);
-        for(int i = 0;i<=iterations;i++){
+        ArrayList<Integer> RGB = misc.parseHex(hex);
 
-            ArrayList<Integer> RGB = misc.parseHex(Integer.parseInt(hexField.getText()));
+        for(int i = 0;i<iterations;i++){
+
             //init var
             int RIndex = 0;
             int GIndex = 1;
@@ -119,18 +123,28 @@ public class display{
             int[] indexList = {RIndex,GIndex,BIndex};
             int[] colorList = {RColor,GColor,BColor};
 
+            if(i!=0){
+                RIndex += 3*i;
+                GIndex += 3*i;
+                BIndex += 3*i;
+            }
+            System.out.println("SIZE "+RGB.size());
             /*ik ur not supposed to do scalars whenever possible to keep code versitile but trying to do Arrays.aslist(indexList).size() just always returns 0 and i dont think
             they're gonna invent RGB2 and add a fourth value any time soon or whatever so itll always just be 3 inputs of R,G,B anyway*/
-            for(int j = 0; j<2;j++){
-                if(indexList[j]>RGB.size()){
+            for(int j = 0; j<=2;j++){
+                if(indexList[j]>=RGB.size()){
                     colorList[j] = 0;
                 }else{
                     colorList[j] = RGB.get(indexList[j]);
-                }
-                if(colorList[j]>255||colorList[j]<0){
-                    colorList[j] = 255;
+                    if(colorList[j]>255||colorList[j]<0){
+                        colorList[j] = 255;
+                    }
+                    
                 }
             }
+            
+
+            
 
             RColor = colorList[0];
             GColor = colorList[1];
@@ -138,13 +152,13 @@ public class display{
 
             color = new Color(RColor,GColor,BColor);
             System.out.println(color);
-        }
 
-        JTextField colorPane = new JTextField();
-        colorPane.setBackground(color);
-        panel.add(colorPane);
+            JTextField colorPane = new JTextField();
+            colorPane.setBackground(color);
+            panel.add(colorPane);
+
+        }
         panel.repaint();
         panel.revalidate();
-
-        }
+    }
 }
