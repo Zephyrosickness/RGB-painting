@@ -23,7 +23,6 @@ public class display{
     //controlpanel: row/column data / colorgrid: panel for the colors / inputpanel: panel for user rgb input
     static JPanel controlPanel = new JPanel();
     static JPanel colorGrid = new JPanel();
-    static JPanel inputPanel = new JPanel();
     public static void main(String[] args){
 
         // create a window
@@ -107,13 +106,13 @@ public class display{
         }
 
         panel.setLayout(new GridLayout(row,column));
-        Color color = new Color(0,0,0);
+        Color color;
         ArrayList<Integer> RGB = misc.parseHex(hex);
 
         for(int i = 0;i<iterations;i++){
 
             //init var
-            int RIndex = 0 + (3*i);
+            int RIndex = 3*i;
             int GIndex = 1 + (3*i);
             int BIndex = 2 + (3*i);
 
